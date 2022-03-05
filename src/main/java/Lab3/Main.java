@@ -101,7 +101,7 @@ public class Main {
         LinkedList<Integer> linkedList = new LinkedList<>();
         Soreted quickSorted = new Soreted();
 
-        for (int i = 0; i <1_000; i++) {
+        for (int i = 0; i < 1_000; i++) {
             int rnd = (int) (Math.random() * ((1000 + 1000))) - 1000;
             myList.add(rnd);
             linkedList.add(rnd);

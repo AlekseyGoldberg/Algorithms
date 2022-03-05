@@ -5,7 +5,7 @@ public class Human {
     private int yearOfBirth;
 
     public Human(String fio, int yearOfBirth) {
-        this.fio=fio;
+        this.fio = fio;
         this.yearOfBirth = yearOfBirth;
     }
 

@@ -10,12 +10,12 @@ public class MyLinkedList<T> implements Iterable<T> {
     private int length;
 
 
-    public Integer[] toArray(){
-        Integer[] array=new Integer[length];
-        Node<T> node=first;
-        for (int i=0;i<length;i++){
-            array[i]=(Integer) node.getContent();
-            node=node.getNext();
+    public Integer[] toArray() {
+        Integer[] array = new Integer[length];
+        Node<T> node = first;
+        for (int i = 0; i < length; i++) {
+            array[i] = (Integer) node.getContent();
+            node = node.getNext();
         }
         return array;
     }
@@ -34,19 +34,19 @@ public class MyLinkedList<T> implements Iterable<T> {
     }
 
     public void add(int index, T content) {
-        if (index==0){
+        if (index == 0) {
             Node<T> newNode = new Node<>(first, null, content);
             first.setLast(newNode);
-            first=newNode;
+            first = newNode;
             length++;
 
-        }else if (index==length-1){
+        } else if (index == length - 1) {
             Node<T> newNode = new Node<>(null, last, content);
             last.setNext(newNode);
-            last=newNode;
+            last = newNode;
             length++;
 
-        }else {
+        } else {
             Node<T> element = getIndex(index);
             Node<T> newNode = new Node<>(element, element.getLast(), content);
             element.getLast().setNext(newNode);
@@ -58,13 +58,13 @@ public class MyLinkedList<T> implements Iterable<T> {
 
     public T remove(int index) {
         if (index == 0) {
-            Node<T> element=first;
+            Node<T> element = first;
             first = first.getNext();
             first.setLast(null);
             length--;
             return element.getContent();
-        } else if (index == length-1) {
-            Node<T> element=last;
+        } else if (index == length - 1) {
+            Node<T> element = last;
             last = last.getLast();
             last.setNext(null);
             length--;
