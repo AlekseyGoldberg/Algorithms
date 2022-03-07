@@ -57,25 +57,24 @@ public class MyLinkedList<T> implements Iterable<T> {
     }
 
     public T remove(int index) {
+        Node<T> element;
         if (index == 0) {
-            Node<T> element = first;
+            element = first;
             first = first.getNext();
             first.setLast(null);
             length--;
-            return element.getContent();
         } else if (index == length - 1) {
-            Node<T> element = last;
+            element = last;
             last = last.getLast();
             last.setNext(null);
             length--;
-            return last.getContent();
         } else {
-            Node<T> element = getIndex(index);
+            element = getIndex(index);
             element.getLast().setNext(element.getNext());
             element.getNext().setLast(element.getLast());
             length--;
-            return element.getContent();
         }
+        return element.getContent();
     }
 
     public Node<T> getIndex(int index) {
