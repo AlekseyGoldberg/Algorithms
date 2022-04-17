@@ -58,4 +58,9 @@ public class Node<T> implements Comparable<T> {
     public int compareTo(T o) {
         return this.getContent().hashCode() - o.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "content=" + content;
+    }
 }

@@ -10,17 +10,20 @@ public class BinaryTree<T> implements Iterable<T> {
     private Node<T> searchInTree(T value) {
         Node<T> current = root;
         while (true) {
+            if (current.getContent().equals(value)) {
+                return current;
+            }
             if (current.compareTo(value) > 0)
-                if (current.getLeft() != null) {
-                    current = current.getLeft();
-                } else {
+                if (current.getLeft() == null) {
                     return current;
+                } else {
+                    current = current.getLeft();
                 }
             else {
-                if (current.getRight() != null) {
-                    current = current.getRight();
-                } else {
+                if (current.getRight() == null) {
                     return current;
+                } else {
+                    current = current.getRight();
                 }
             }
         }
@@ -30,10 +33,12 @@ public class BinaryTree<T> implements Iterable<T> {
     public void add(T value) {
         if (length == 0) {
             root = new Node<>(value);
+            root.setRight(null);
+            root.setLeft(null);
             length++;
         } else {
             Node<T> parentNode = searchInTree(value);
-            if (parentNode.compareTo(value) != 0) {
+            if (!parentNode.getContent().equals(value)) {
                 Node<T> newNode = new Node<>(value);
                 newNode.setParent(parentNode);
                 if (parentNode.compareTo(value) > 0)
@@ -42,41 +47,54 @@ public class BinaryTree<T> implements Iterable<T> {
                     parentNode.setRight(newNode);
                 newNode.setLeft(null);
                 newNode.setRight(null);
+                length++;
             }
         }
     }
 
     public void remove(T value) {
-        Node<T> searchNode = searchInTree(value);
-        Node<T> parentNode = searchNode.getParent();
-        //Проверка найденный элемент является левым или правым потомков своего родителя
-        // если нет, переопределяем ссылки левого потомка на родителя и родителю на левого потомка
-        if (searchNode.getLeft() != null) {
-            // посмотреть еще раз что и как должно переопределяться, надо у родителя найти searchNode
-            Node<T> newNode = getFarRightNode(searchNode.getLeft());
-            parentNode.setLeft(newNode);
-            newNode.setParent(parentNode);
-            newNode.setLeft(searchNode.getLeft());
-            searchNode.getLeft().setParent(newNode);
-        } else if (searchNode.getRight()!=null){
-            Node<T> newNode = getFarLeftNode(searchNode.getRight());
-            parentNode.setRight(newNode);
-            newNode.setParent(parentNode);
-            newNode.setRight(searchNode.getRight());
-            searchNode.getRight().setParent(newNode);
-        }else {
-            if (parentNode.getLeft().equals(searchNode))
-                parentNode.setLeft(null);
+        Node<T> deleteNode = searchInTree(value);
+        Node<T> parentDeleteNode = deleteNode.getParent();
+        boolean left = parentDeleteNode.getLeft().equals(deleteNode);
+        //проверка является удаляемая нода листом
+        if (deleteNode.getLeft() == null && deleteNode.getRight() == null) {
+            if (left)
+                parentDeleteNode.setLeft(null);
             else
-                parentNode.setRight(null);
+                parentDeleteNode.setRight(null);
+        } else if (deleteNode.getRight() == null) {
+            //Если удаляемый узел имеет только левых потомков
+            Node<T> newNode = deleteNode.getLeft();
+            if (left)
+                parentDeleteNode.setLeft(newNode);
+            else
+                parentDeleteNode.setRight(newNode);
+            newNode.setParent(parentDeleteNode);
+        } else {
+            // если удаляемый узел имеет правых потомков
+            Node<T> newNode = getFarLeftNode(deleteNode.getRight());
+            if (left)
+                parentDeleteNode.setLeft(newNode);
+            else
+                parentDeleteNode.setRight(newNode);
+            // если минимальное значение в правом поддереве равно правому потомку удаляемого узла
+            if (newNode.equals(deleteNode.getRight())) {
+                newNode.setParent(parentDeleteNode);
+            } else {
+                // указываем, что родитель новой ноды не ссылается больше на нее
+                if (newNode.getParent().getLeft().equals(newNode))
+                    newNode.getParent().setLeft(null);
+                else
+                    newNode.getParent().setRight(null);
+                // задаем новой ноде нового родителя
+                newNode.setParent(parentDeleteNode);
+                newNode.setRight(deleteNode.getRight());
+                deleteNode.getRight().setParent(newNode);
+            }
+            //задаем новой ноде левого потомка
+            newNode.setLeft(deleteNode.getLeft());
+            deleteNode.getLeft().setParent(newNode);
         }
-    }
-
-    private Node<T> getFarRightNode(Node<T> node) {
-        while (node.getRight() != null) {
-            node = node.getRight();
-        }
-        return node;
     }
 
     //Крайнее левое положение левой ноды
