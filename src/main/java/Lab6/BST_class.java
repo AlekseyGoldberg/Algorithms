@@ -7,6 +7,20 @@ public class BinaryTree<T> implements Iterable<T> {
     private Node<T> root;
     private int length;
 
+    public BinaryTree(T[]mass){
+        length=0;
+        for (T t : mass) {
+            add(t);
+        }
+    }
+    public BinaryTree(){length=0;}
+
+    public Node<T> found(T value)  {
+        Node<T> foundNode=searchInTree(value);
+        if (foundNode.getContent().equals(value))
+            return foundNode;
+        return null;
+    }
     private Node<T> searchInTree(T value) {
         Node<T> current = root;
         while (true) {
@@ -27,7 +41,6 @@ public class BinaryTree<T> implements Iterable<T> {
                 }
             }
         }
-
     }
 
     public void add(T value) {
@@ -56,7 +69,6 @@ public class BinaryTree<T> implements Iterable<T> {
         Node<T> deleteNode = searchInTree(value);
         Node<T> parentDeleteNode = deleteNode.getParent();
         boolean left = parentDeleteNode.getLeft().equals(deleteNode);
-        //проверка является удаляемая нода листом
         if (deleteNode.getLeft() == null && deleteNode.getRight() == null) {
             if (left)
                 parentDeleteNode.setLeft(null);
@@ -138,5 +150,9 @@ public class BinaryTree<T> implements Iterable<T> {
             }
             return result;
         }
+    }
+
+    public int getLength() {
+        return length;
     }
 }
